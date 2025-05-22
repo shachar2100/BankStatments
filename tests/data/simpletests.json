@@ -1,0 +1,42 @@
+[
+    {
+        "transaction": {
+            "amount": 2324,
+            "date": "2025-01-28",
+            "description": "Global Tech web services payment"
+        },
+        "expected_invoice": [1202]
+    },
+    {
+        "transaction": {
+            "amount": 339,
+            "date": "2025-03-01",
+            "description": "Delta Co website"
+        },
+        "expected_invoice": [1104]
+    },
+    {
+        "transaction": {
+            "amount": 2445,
+            "date": "2025-03-15",
+            "description": "Acme March hosting renewal"
+        },
+        "expected_invoice": [1203]
+    },
+    {
+        "transaction": {
+            "amount": 2616,
+            "date": "2025-01-27",
+            "description": "Echo hosting"
+        },
+        "expected_invoice": [1005]
+    },
+    {
+        "transaction": {
+            "amount": 60,
+            "date": "2025-02-21",
+            "description": "Acme consulting"
+        },
+        "expected_invoice": [1204]
+    }
+]

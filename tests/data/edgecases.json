@@ -1,0 +1,50 @@
+[
+    {
+        "transaction": {
+            "amount": 2324,
+            "date": "2025-01-28",
+            "description": "Payment for January services"
+        },
+        "note": "Same amount as Global Tech, but no company mentioned in description"
+    },
+    {
+        "transaction": {
+            "amount": 339,
+            "date": "2025-03-01",
+            "description": ""
+        },
+        "note": "Correct amount and date but empty description"
+    },
+    {
+        "transaction": {
+            "amount": 2446,
+            "date": "2025-03-15",
+            "description": "Acme March hosting renewal"
+        },
+        "note": "Off-by-one amount error (1 unit higher than invoice)"
+    },
+    {
+        "transaction": {
+            "amount": 5000,
+            "date": "2025-01-27",
+            "description": "Echo Solutions quarterly bundle"
+        },
+        "note": "Unusually large amount that could map to multiple invoices"
+    },
+    {
+        "transaction": {
+            "amount": 60,
+            "date": "2025-02-22",
+            "description": "Consulting service payment"
+        },
+        "note": "Correct amount, date is one day late, generic description"
+    },
+    {
+        "transaction": {
+            "amount": 100,
+            "date": "2025-04-01",
+            "description": "Personal expense unrelated to any invoice"
+        },
+        "note": "No invoice should match — unrelated expense"
+    }
+]
