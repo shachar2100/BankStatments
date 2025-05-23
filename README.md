@@ -112,48 +112,50 @@ tests/
 
 > This is the "join table" used to log all invoice ↔ transaction matches.
 
----
-┌──────────────────────────┐
-│        customers         │
-├────────────┬─────────────┤
-│ id         │ UUID (PK)   │◄────────────┐
-│ name       │ text        │             │
-│ created_at │ timestamp   │             │
-└────────────┴─────────────┘             │
-                                         │
-                                         │
-                                         ▼
-┌──────────────────────────┐    ┌──────────────────────────┐
-│        invoices          │    │     bank_statement       │
-├────────────┬─────────────┤    ├────────────┬─────────────┤
-│ id         │ UUID (PK)   │    │ id         │ UUID (PK)   │
-│ invoice_number│ text     │    │ date       │ date        │
-│ customer_id │ UUID (FK)  │────┘ description│ text        │
-│ customer_name│ text      │    │ amount     │ float8      │
-│ invoice_date│ date       │    │ customer_id│ UUID (FK)   │
-│ due_date   │ date        │    │ created_at │ timestamp   │
-│ line_items │ jsonb       │    └────────────┴─────────────┘
-│ paid       │ boolean     │
-│ created_at │ timestamp   │
-└────────────┴─────────────┘
+──────────────────────────────────────────────────────────────────────────────
+                               DATABASE SCHEMA
+──────────────────────────────────────────────────────────────────────────────
 
-         ▲        ▲
-         │        │
-         │        │
-         │        │
-         │        └───────────────────────────┐
-         │                                    │
-         │                                    ▼
-         └──────────────────────┐   ┌──────────────────────────┐
-                                │   │   invoice_transactions   │
-                                │   ├──────────────────────────┤
-                                └──►│ id           │ UUID (PK) │
-                                    │ transaction_id│ UUID (FK)│
-                                    │ invoice_id   │ UUID (FK) │
-                                    │ customer_id  │ UUID (FK) │
-                                    └──────────────┴───────────┘
+┌──────────────────────────────┐
+│          customers           │
+├────────────────┬────────────┤
+│ id             │ UUID (PK)  │◄────────────┐
+│ name           │ text       │             │
+│ created_at     │ timestamp  │             │
+└────────────────┴────────────┘             │
+                                            │
+                                            ▼
+┌──────────────────────────────┐     ┌──────────────────────────────┐
+│           invoices           │     │        bank_statement        │
+├────────────────┬────────────┤     ├────────────────┬────────────┤
+│ id             │ UUID (PK)  │     │ id             │ UUID (PK)  │
+│ invoice_number │ text       │     │ date           │ date       │
+│ customer_id    │ UUID (FK)  │─────┘ description     │ text       │
+│ customer_name  │ text       │     │ amount         │ float8     │
+│ invoice_date   │ date       │     │ customer_id    │ UUID (FK)  │
+│ due_date       │ date       │     │ created_at     │ timestamp  │
+│ line_items     │ jsonb      │     └────────────────┴────────────┘
+│ paid           │ boolean    │
+│ created_at     │ timestamp  │
+└────────────────┴────────────┘
 
----
+        ▲                 ▲
+        │                 │
+        │                 │
+        │                 │
+        │                 └──────────────────────────────┐
+        │                                                │
+        ▼                                                ▼
+
+            ┌──────────────────────────────────────────┐
+            │         invoice_transactions             │
+            ├────────────────────────────┬─────────────┤
+            │ id                         │ UUID (PK)   │
+            │ transaction_id             │ UUID (FK)   │
+            │ invoice_id                 │ UUID (FK)   │
+            │ customer_id                │ UUID (FK)   │
+            └────────────────────────────┴─────────────┘
+
 
 ## Tech Stack
 
