@@ -112,7 +112,7 @@ tests/
 
 > This is the "join table" used to log all invoice ↔ transaction matches.
 
-
+---
 ┌──────────────────────────┐
 │        customers         │
 ├────────────┬─────────────┤
