@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import { Invoice } from '../src/models/Invoice';
-import { Transaction } from '../src/models/Transaction';
+import { BankStatement } from '../src/models/BankStatement';
 import { Customer } from '../src/models/Customer';
 import { llmMatch } from '../src/utils/matching';
 
@@ -34,7 +34,7 @@ describe('Transaction → Invoice Matching Test', () => {
   test.each(testCases)(
     'matches transaction to invoice %#',
     async ({ transaction, expected_invoice }) => {
-      const txn = new Transaction(
+      const txn = new BankStatement(
         transaction.date,
         transaction.description,
         transaction.amount.toString()

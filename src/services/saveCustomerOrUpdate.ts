@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient';
 import { Customer } from '../models/Customer';
-import { saveInvoice } from './invoiceService';
+import { addInvoice } from './addInvoice';
 
 export async function saveCustomerOrUpdate(customer: Customer): Promise<string> {
   // 1. Check if customer exists
@@ -34,7 +34,7 @@ export async function saveCustomerOrUpdate(customer: Customer): Promise<string> 
   for (const invoice of [...customer.unpaid_invoices, ...customer.paid_invoices]) {
     const isPaid = customer.paid_invoices.includes(invoice);
     invoice.paid = isPaid
-    await saveInvoice(invoice, customerId);
+    await addInvoice(invoice, customerId);
   }
 
   return customerId;

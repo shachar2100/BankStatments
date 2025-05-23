@@ -1,0 +1,163 @@
+[
+  {
+    "amount": 339,
+    "date": "2025-03-01",
+    "description": "Delta Co website"
+  },
+  {
+    "amount": 2445,
+    "date": "2025-03-02",
+    "description": "Acme Corp payment for INV#1203"
+  },
+
+  {
+    "amount": 2445,
+    "date": "2025-03-02",
+    "description": "Acme Corp payment for INV#1203"
+  },
+
+  {
+  "amount": 29012,
+  "date": "2025-03-02",
+  "description": "Charlie Inc: one on 2025-01-25 for a Software License (1104, Bank Transfer) due 2025-02-09, and another on 2025-02-23 for Maintenance (1808, Cash) due 2025-03-10."
+},
+
+{
+  "amount": 100000000,
+  "date": "2020-03-02",
+  "description": "Johns Companie"
+},
+{
+  "amount": 848,
+  "date": "2025-02-12",
+  "description": "FancyCorp Domain Renewal 744, Hosting 104"
+},
+
+{
+  "amount": 848,
+  "date": "2025-02-4",
+  "description": "Global Tech Maintenace: $274 Hosting: $956 SEO Services: $104 paypal "
+},
+  {
+    "amount": 2909,
+    "date": "2025-03-02",
+    "description": "Acme Corp payment for INV#1002",
+    "test_case": "Exact match to single invoice (Acme Corp, INV#1002)"
+  },
+  {
+    "amount": 67709,
+    "date": "2025-03-11",
+    "description": "Unrelated expense for Misc Tools Inc",
+    "test_case": "Noise / unrelated large transaction (Misc Tools Inc)"
+  },
+  {
+    "amount": 3147,
+    "date": "2025-01-22",
+    "description": "Beta LLC payment for INV#1204",
+    "test_case": "Exact match to single invoice (Beta LLC, INV#1204)"
+  },
+  {
+    "amount": 14280,
+    "date": "2025-03-04",
+    "description": "Unrelated expense for Misc Tools Inc",
+    "test_case": "Noise / unrelated large transaction (Misc Tools Inc)"
+  },
+  {
+    "amount": 4067,
+    "date": "2025-02-15",
+    "description": "Charlie Inc group payment: INV#1001; INV#1101",
+    "test_case": "Grouped invoice total from same customer (Charlie Inc, INV#1001 & INV#1101)"
+  },
+  {
+    "amount": 1923,
+    "date": "2025-03-08",
+    "description": "Global Tech payment for INV#1205",
+    "test_case": "Exact match to single invoice (Global Tech, INV#1205)"
+  },
+  {
+    "amount": 1923,
+    "date": "2025-03-09",
+    "description": "Global Tech payment for INV#1205",
+    "test_case": "Reused invoice payment (Global Tech, INV#1205 again)"
+  },
+  {
+    "amount": 1125,
+    "date": "2025-01-15",
+    "description": "Acme Corp group payment: INV#1102; INV#1204",
+    "test_case": "Grouped invoice total (Acme Corp, INV#1102 & INV#1204)"
+  },
+  {
+    "amount": 3613,
+    "date": "2025-01-20",
+    "description": "Global Tech group payment: INV#1205; INV#1201",
+    "test_case": "Grouped invoice total (Global Tech, INV#1205 & INV#1201)"
+  },
+  {
+    "amount": 39091,
+    "date": "2025-03-08",
+    "description": "Unrelated expense for XYZ Ltd",
+    "test_case": "Noise / unrelated large transaction (XYZ Ltd)"
+  },
+  {
+    "amount": 1690,
+    "date": "2025-01-20",
+    "description": "Global Tech payment for INV#1201",
+    "test_case": "Exact match to single invoice (Global Tech, INV#1201)"
+  },
+  {
+    "amount": 47576,
+    "date": "2025-03-07",
+    "description": "Unrelated expense for XYZ Ltd",
+    "test_case": "Noise / unrelated large transaction (XYZ Ltd)"
+  },
+  {
+    "amount": 4455,
+    "date": "2025-03-09",
+    "description": "Acme Corp group payment: INV#1101; INV#1102",
+    "test_case": "Grouped invoice total (Acme Corp, INV#1101 & INV#1102)"
+  },
+  {
+    "amount": 1808,
+    "date": "2025-03-01",
+    "description": "Charlie Inc payment for INV#1001",
+    "test_case": "Exact match to single invoice (Charlie Inc, INV#1001)"
+  },
+  {
+    "amount": 1808,
+    "date": "2025-03-02",
+    "description": "Charlie Inc payment for INV#1001",
+    "test_case": "Reused invoice payment (Charlie Inc, INV#1001 again)"
+  }
+]
+
+
+
+// 1. Easy -> 1104	Delta Co	2025-03-01	2025-03-16	Web Design: $339	PayPal
+
+// 2. Easy -> 1203	Acme Corp	2025-02-28	2025-03-15	Domain Renewal: $1269; Maintenance: $1176	PayPal
+
+// 3. Put the same one twice -> Returns the same id as the one made
+
+// 4. Two Charlie in Invoices together in one bankstatment - > 1001	Charlie Inc	2025-01-25	2025-02-09	Software License: $1104	Bank Transfer || 1001	Charlie Inc	2025-02-23	2025-03-10	Maintenance: $1808	Cash
+
+// 5. Random shouldn't connect with anything
+
+// 6. Mix between the items -> 1103	FancyCorp	2025-01-28	2025-02-12	Domain Renewal: $104; Hosting: $744	Cash
+
+// 7. After due date -> 1103	Global Tech	2025-01-17	2025-02-01	Maintenance: $274; Hosting: $956; SEO Services: $104	PayPal
+
+// 8. Exact match to single invoice (Acme Corp, INV#1002)
+// 9. Noise / unrelated large transaction (Misc Tools Inc)
+// 10. Exact match to single invoice (Beta LLC, INV#1204)
+// 11. Noise / unrelated large transaction (Misc Tools Inc)
+// 12. Grouped invoice total from same customer (Charlie Inc, INV#1001 & INV#1101)
+// 13. Exact match to single invoice (Global Tech, INV#1205)
+// 14. Reused invoice payment (Global Tech, INV#1205 again)
+// 15. Grouped invoice total (Acme Corp, INV#1102 & INV#1204)
+// 16. Grouped invoice total (Global Tech, INV#1205 & INV#1201)
+// 17. Noise / unrelated large transaction (XYZ Ltd)
+// 18. Exact match to single invoice (Global Tech, INV#1201)
+// 19. Noise / unrelated large transaction (XYZ Ltd)
+// 20. Grouped invoice total (Acme Corp, INV#1101 & INV#1102)
+// 21. Exact match to single invoice (Charlie Inc, INV#1001)
+// 22. Reused invoice payment (Charlie Inc, INV#1001 again)

@@ -1,5 +1,5 @@
 import { Invoice } from '../models/Invoice';
-import { Transaction } from '../models/Transaction';
+import { BankStatement } from '../models/BankStatement';
 import { OpenAI } from 'openai';
 
 const openai = new OpenAI({
@@ -7,26 +7,68 @@ const openai = new OpenAI({
 });
 
 export async function llmMatch(
-  transaction: Transaction,
+  transaction: BankStatement,
   invoices: Invoice[]
 ): Promise<Invoice[]> {
-  const prompt = `
-You are a helpful assistant for an accounting team.
 
-Here is a bank transaction:
-${transaction.getString()}
 
-And here are open invoices:
-${invoices.map((inv) => inv.getString()).join('\n\n')}
-
-Which invoice(s) is this transaction most likely paying for?
-
-👉 Respond ONLY with invoice number(s) separated by commas (e.g., "1202, 1203"), or "none" if there's no match.
-Do not include any explanation.
-`.trim();
+    const prompt = `
+  You are a precise reconciliation assistant. Silently reason through the checklist below, then output **only** the matching invoice IDs (comma-separated) or the word "none".
+  
+  ──────────────── Checklist ────────────────
+  
+  1. Amount  
+  • The transaction amount must exactly equal:
+    – one invoice total, or  
+    – the sum of two or more invoice totals (from the same customer, unless invoice numbers are explicitly mentioned in the description).  
+  *Example:* A $2445 transaction may match a single invoice of $2445 or two invoices from the same customer of $1269 and $1176.
+  
+  • Do NOT match:
+    – Overpayments or underpayments  
+    – Amounts altered by fees, taxes, or rounding errors
+  
+  2. Date  
+  • Transaction date must be on or after the invoice issue date  
+  • Prefer matches on or before the due date, but allow past-due matches if all other criteria are met
+  
+  3. Customer Name  
+  • Perform fuzzy matching  
+  • Minor differences in case, punctuation, or spelling are acceptable  
+  *Examples:* "Charlie Inc" ≈ "Charlie inc", "Global Tech" ≈ "G. Tech"
+  
+  4. Invoice Number in Description  
+  • If the transaction description includes an invoice number, restrict the match to:
+    – that specific invoice, or  
+    – invoices from that customer  
+  • Still apply Amount, Date, and Customer Name rules
+  
+  5. Line-Item Clues (Optional)  
+  • Words like "Domain Renewal", "Hosting", "Consulting" can support match confidence  
+  • Never override rules 1–4
+  
+  6. Irrelevant Transactions  
+  • Do not match transactions that are:
+    – Salaries, rent, SaaS tools  
+    – Refunds or reversals  
+    – Bank fees or processing costs
+  
+  7. No Guessing  
+  • If any rule is unmet or uncertain, respond with: "none"
+  
+  ──────────────── Bank Transaction ────────────────
+  ${transaction.getString()}
+  
+  ──────────────── Open Invoices ────────────────
+  ${invoices.map(inv => inv.getString()).join('\\n\\n')}
+  
+  ──────────────── Response Format ────────────────
+  • Comma-separated invoice IDs (e.g., \`1104\`, \`1001,1002\`)  
+  • Or the single word: \`none\`
+  `.trim();
+  
 
   const completion = await openai.chat.completions.create({
-    model: 'gpt-4.1-mini',
+    model: 'gpt-4',
     messages: [
       { role: 'system', content: 'You are a helpful assistant for invoice matching.' },
       { role: 'user', content: prompt },
@@ -34,38 +76,35 @@ Do not include any explanation.
     temperature: 0.2,
   });
 
-  console.log(completion)
 
+  console.log('lengthhhh: ', invoices.length)
   const raw = completion.choices[0].message.content?.trim() ?? '';
+
 
   if (raw.toLowerCase() === 'none') {
     return [];
   }
 
-  const matchedNumbers = Array.from(
+  const matchedIds = Array.from(
     new Set(
       raw
         .split(',')
-        .map((id) => parseInt(id.trim(), 10))
-        .filter((id) => !isNaN(id))
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0)
     )
   );
 
-  if (matchedNumbers.length === 0) {
-    console.warn('LLM response did not contain valid invoice numbers:', raw);
-    return [];
-  }
-
-  // Return unique invoice objects by invoice_number
   const matchedInvoices: Invoice[] = [];
-  const seen = new Set<number>();
-
+  const seen = new Set<string>();
+  
   for (const inv of invoices) {
-    if (matchedNumbers.includes(inv.invoice_number) && !seen.has(inv.invoice_number)) {
+    if (matchedIds.includes(inv.id) && !seen.has(inv.id)) {
       matchedInvoices.push(inv);
-      seen.add(inv.invoice_number);
+      seen.add(inv.id);
     }
   }
-
-  return matchedInvoices;
+  console.log('---------------------------------')
+  console.log('matchedInvoices: ', matchedInvoices)
+  console.log('seen: ', seen)
+  return matchedInvoices; 
 }

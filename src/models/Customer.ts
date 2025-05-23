@@ -1,12 +1,13 @@
 import { Invoice } from './Invoice';
 import { parseCSVFile } from '../utils/parseCsv';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export class Customer {
     paid_invoices: Invoice[] = [];
     unpaid_invoices: Invoice[] = [];
 
-    constructor(public name: string, public id?: string ) {}
+    constructor(public name: string, public id: string = uuidv4()  ) {}
 
     initializeFromCSV(csvPath: string): void {
     const raw_invoices = parseCSVFile(csvPath); 
@@ -18,7 +19,8 @@ export class Customer {
             invoice.CustomerName,
             invoice.InvoiceDate,
             invoice.DueDate,
-            invoice.paid
+            invoice.paid,
+            invoice.id 
             );
 
             newInvoice.setRawDescription(invoice.LineItems);

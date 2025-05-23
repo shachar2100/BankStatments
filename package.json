@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/shachar2100/AtlasChallenge#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.18",
     "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.21",
     "@types/papaparse": "^5.3.16",
@@ -32,9 +34,12 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
     "openai": "^4.102.0",
     "papaparse": "^5.5.3",
-    "string-similarity": "^4.0.4"
+    "string-similarity": "^4.0.4",
+    "uuid": "^11.1.0"
   }
 }

@@ -9,6 +9,6 @@
     "strict": true,                          // Enable all strict type-checking options
     "skipLibCheck": true                     // Faster builds by skipping type checks on .d.ts
   },
-  "include": ["src", "tests"],              // Include both code and tests
+  "include": ["src", "tests", "src/index.ts", "data/previndex.ts"],              // Include both code and tests
   "exclude": ["node_modules", "dist"]       // Ignore output and dependencies
 }

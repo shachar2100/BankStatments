@@ -1,5 +1,5 @@
 import { Invoice } from '../src/models/Invoice';
-import { Transaction } from '../src/models/Transaction';
+import { Transaction } from '../src/models/BankStatement';
 
 describe('Invoice', () => {
   it('should initialize with no matching transactions', () => {
