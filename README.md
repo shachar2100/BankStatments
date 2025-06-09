@@ -1,17 +1,38 @@
-# Atlas Challenge – LLM-Based Invoice Matching
+# LLM-Powered Invoice Matching Service
 
-This backend app ingests bank transactions, uses an LLM (OpenAI) to match them to customer invoices, and persists everything in Supabase. Built in TypeScript with Express.
+This project is a backend service that ingests banking transactions and uses an LLM to intelligently match them to static customer invoices. The results, along with all source data, are stored in a Supabase Postgres database. It is designed to simulate a real-world finance automation workflow in the accounts receivable space.
+
+Built with TypeScript and Express.
 
 ---
 
-## Setup
+## 🧠 Context
+
+In many businesses, particularly SaaS, incoming payments need to be reconciled against issued invoices — a process known as **cash application**. This can be time-consuming and error-prone when done manually, especially when transactions contain vague or inconsistent descriptions. This project uses an LLM to automate that matching process using semantic reasoning, enabling faster and more accurate reconciliation.
+
+---
+
+## ✨ Key Features
+
+* Accepts and stores incoming transaction data
+* Uses an LLM to semantically match transactions to customer invoices
+* Supports invoice and transaction storage, retrieval, and linkage
+* Fully built with TypeScript, Supabase, and OpenAI
+* Modular, testable, and ready for local deployment or expansion
+
+---
+
+## 🚀 Getting Started
 
 1. **Install dependencies**
+
 ```bash
 npm install
-````
+```
 
-2. **Create `.env`**
+2. **Set up environment variables**
+
+Create a `.env` file with the following:
 
 ```env
 SUPABASE_URL=your-url
@@ -27,40 +48,43 @@ npx ts-node src/index.ts
 
 ---
 
-## API Endpoints
+## 📡 API Endpoints
 
 ### `POST /:customer_name/transactions`
 
-Ingest one or more transactions (as JSON). Each is matched to unpaid invoices using LLM-based reasoning.
-**Returns:** a list of matched transaction IDs.
+Ingest one or more bank transactions in JSON format. The backend attempts to match each transaction to one or more invoices using LLM-based reasoning.
 
-### `GET /matches/:customer_name/:transaction_id`
-
-Returns the invoice(s) matched to a given transaction.
+**Returns:** a list of transaction IDs and their matched invoice references.
 
 ---
 
-## 📁 Project Structure
+### `GET /matches/:customer_name/:transaction_id`
+
+Retrieve matched invoice(s) for a specific transaction.
+
+---
+
+## 🧾 Data Model & Structure
 
 ```
 src/
 ├── index.ts               # Main Express server
-├── models/                # Invoice, Customer, BankStatement classes
-├── services/              # DB logic (add/get invoice, customer, transactions)
-├── utils/                 # Matching logic and CSV parser
-├── lib/                   # Supabase client setup
+├── models/                # Domain models for Invoices, Customers, etc.
+├── services/              # Persistence logic for Supabase
+├── utils/                 # Matching logic, CSV parsers, helpers
+├── lib/                   # Supabase client configuration
 
 data/
-└── test_invoices.csv      # Static invoice test data
+└── test_invoices.csv      # Sample invoice data
 
 tests/
 ├── *.test.ts              # Unit tests
-└── data/                  # Edge and simple test cases
+└── data/                  # Test datasets
 ```
 
 ---
 
-## 🗃️ Supabase Tables
+## 🗃️ Supabase Schema Overview
 
 ### `customers`
 
@@ -101,7 +125,7 @@ tests/
 
 ---
 
-### `invoice_transactions` (matches)
+### `invoice_transactions` (join table)
 
 | Field            | Type | Description              |
 | ---------------- | ---- | ------------------------ |
@@ -110,58 +134,26 @@ tests/
 | `invoice_id`     | UUID | FK → `invoices.id`       |
 | `customer_id`    | UUID | FK → `customers.id`      |
 
-> This is the "join table" used to log all invoice ↔ transaction matches.
+Used to store match relationships between transactions and invoices.
 
-──────────────────────────────────────────────────────────────────────────────
-                               DATABASE SCHEMA
-──────────────────────────────────────────────────────────────────────────────
+---
 
-┌──────────────────────────────┐
-│          customers           │
-├────────────────┬────────────┤
-│ id             │ UUID (PK)  │◄────────────┐
-│ name           │ text       │             │
-│ created_at     │ timestamp  │             │
-└────────────────┴────────────┘             │
-                                            │
-                                            ▼
-┌──────────────────────────────┐     ┌──────────────────────────────┐
-│           invoices           │     │        bank_statement        │
-├────────────────┬────────────┤     ├────────────────┬────────────┤
-│ id             │ UUID (PK)  │     │ id             │ UUID (PK)  │
-│ invoice_number │ text       │     │ date           │ date       │
-│ customer_id    │ UUID (FK)  │─────┘ description     │ text       │
-│ customer_name  │ text       │     │ amount         │ float8     │
-│ invoice_date   │ date       │     │ customer_id    │ UUID (FK)  │
-│ due_date       │ date       │     │ created_at     │ timestamp  │
-│ line_items     │ jsonb      │     └────────────────┴────────────┘
-│ paid           │ boolean    │
-│ created_at     │ timestamp  │
-└────────────────┴────────────┘
+## 🧪 Testing
 
-        ▲                 ▲
-        │                 │
-        │                 │
-        │                 │
-        │                 └──────────────────────────────┐
-        │                                                │
-        ▼                                                ▼
+Tests live under the `tests/` directory and cover core functionality of the matching and ingestion pipeline.
 
-            ┌──────────────────────────────────────────┐
-            │         invoice_transactions             │
-            ├────────────────────────────┬─────────────┤
-            │ id                         │ UUID (PK)   │
-            │ transaction_id             │ UUID (FK)   │
-            │ invoice_id                 │ UUID (FK)   │
-            │ customer_id                │ UUID (FK)   │
-            └────────────────────────────┴─────────────┘
+To run tests:
 
+```bash
+npm test
+```
 
-## Tech Stack
+---
+
+## 🧰 Tech Stack
 
 * TypeScript + Express
 * Supabase (Postgres)
 * OpenAI GPT-4
-* Jest (for testing)
-
+* Jest (unit testing)
 
